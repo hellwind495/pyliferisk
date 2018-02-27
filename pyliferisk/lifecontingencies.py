@@ -26,8 +26,8 @@ class MortalityTable:
         self.dx = []
         self.ex = []
         self.w = 0
-        self.i = i 
-        self.q = 0        
+        self.i = i
+        self.q = 0
         self.perc = perc
         self.nt = nt
         self.Dx = []
@@ -50,9 +50,9 @@ class MortalityTable:
             self.lx = [100000.0]
             for val in self.qx:
                 self.lx.append(self.lx[-1] * (1 - val / 1000))
-        if self.lx[-1] != 0.0 : 
+        if self.lx[-1] != 0.0 :
             self.lx.append(0.0)
-        if self.w == 0 : 
+        if self.w == 0 :
             self.w = self.lx.index(0) - 1
         if self.qx == []:
             #self.qx = []
@@ -79,8 +79,8 @@ class Actuarial:
         self.dx = []
         self.ex = []
         self.w = 0
-        self.i = i 
-        self.q = 0        
+        self.i = i
+        self.q = 0
         self.perc = perc
         self.nt = nt
         self.Dx = []
@@ -103,9 +103,9 @@ class Actuarial:
             self.lx = [100000.0]
             for val in self.qx:
                 self.lx.append(self.lx[-1] * ( 1 - val / 1000))
-        if self.lx[-1] != 0.0 : 
+        if self.lx[-1] != 0.0 :
             self.lx.append(0.0)
-        if self.w == 0 : 
+        if self.w == 0 :
             self.w = self.lx.index(0) - 1
         if self.qx == []:
             #self.qx = []
@@ -160,7 +160,7 @@ def qx(mt,x):
         return 0
 
 def lx(mt,x):
-    """ lx : Returns the number of survivors at begining of age x """    
+    """ lx : Returns the number of survivors at begining of age x """
     if x < len(mt.lx):
         return mt.lx[x]
     else:
@@ -171,9 +171,9 @@ def w(mt):
     return len(mt.lx)
 
 def dx(mt,x):
-    """ Returns the number of dying at begining of age x """ 
+    """ Returns the number of dying at begining of age x """
     end_x_val = mt.lx.index(0)
-    if x < end_x_val:  
+    if x < end_x_val:
         return mt.lx[x]-mt.lx[x+1]
     else:
         return 0.0
@@ -218,7 +218,7 @@ def Dx(mt,x):
     return ((1/(1+mt.i))**x)*mt.lx[x]
 
 def Nx(mt,x):
-    """ Return the Nx """ 
+    """ Return the Nx """
     n = len(mt.Dx)
     sum1 = 0
     for j in range(x,n):
@@ -227,7 +227,7 @@ def Nx(mt,x):
     return sum1
 
 def Sx(mt,x):
-    """ Return the Sx """    
+    """ Return the Sx """
     n = len(mt.Nx)
     sum1 = 0
     for j in range(x,n):
@@ -236,7 +236,7 @@ def Sx(mt,x):
     return sum1
 
 def Cx(mt,x):
-    """ Return the Cx """   
+    """ Return the Cx """
     return ((1/(1+mt.i))**(x+1))*mt.dx[x]*((1+mt.i)**0.5)
 
 def Mx(mt,x):
@@ -249,7 +249,7 @@ def Mx(mt,x):
     return sum1
 
 def Rx(mt,x):
-    """ Return the Rx """    
+    """ Return the Rx """
     n = len(mt.Mx)
     sum1 = 0
     for j in range(x,n):
@@ -259,7 +259,7 @@ def Rx(mt,x):
 
 # Pure endowment: Deferred capital ---
 def nEx(mt,x,n):
-    """ nEx : Returns the EPV of a pure endowment (deferred capital). 
+    """ nEx : Returns the EPV of a pure endowment (deferred capital).
     Pure endowment benefits are conditional on the survival of the policyholder. (v^n * npx) """
     return mt.Dx[x+n]/mt.Dx[x]
 
@@ -278,7 +278,7 @@ def Axn(mt,x,n):
 
 # Endowment insurance ---
 def AExn(mt,x,n):
-    """ AExn : Returns the EPV of a endowment insurance. 
+    """ AExn : Returns the EPV of a endowment insurance.
     An endowment insurance provides a combination of a term insurance and a pure endowment """
     return (mt.Mx[x]-mt.Mx[x+n])/mt.Dx[x] + mt.Dx[x+n]/mt.Dx[x]
 
@@ -337,7 +337,7 @@ def axn(mt,x,n,m=1):
         return (mt.Nx[x+1]-mt.Nx[x+n+1])/mt.Dx[x]
     else:
         return (mt.Nx[x+1]-mt.Nx[x+n+1])/mt.Dx[x] + ((float(m-1)/float(m*2)) * (1 - nEx(mt,x,n)))
-        
+
 def aax(mt,x,m=1):
     """ äx : Returns the actuarial present value of an (immediate) annuity of 1 per time period (whole life annuity-anticipatory). Payable 'm' per year at the beginning of the period """
     return mt.Nx[x]/mt.Dx[x] - (float(m-1)/float(m*2))
@@ -361,7 +361,7 @@ def tax(mt,x,t,m=1):
     return mt.Nx[x+t+1]/mt.Dx[x] + ((float(m-1)/float(m*2)) * (1 - nEx(mt,x,t)))
 
 
-# Arithmetically increasing annuities (unitary) ----------------- 
+# Arithmetically increasing annuities (unitary) -----------------
 
 def Iaaxn(mt,x,n,*args):
     """ during a term certain, IAn """
@@ -449,18 +449,18 @@ def annuity(mt,x,n,p,m=1,*args):
     arit = False
     wh_l = False
 
-    if isinstance(n,basestring) or n == 99:
+    if isinstance(n,str) or n == 99:
         wh_l = True
     else:
         pass
 
-    if isinstance(m,int) and m >=0 and l == 0: 
+    if isinstance(m,int) and m >=0 and l == 0:
         pass
-    elif l == 0 and isinstance(m,list):  
+    elif l == 0 and isinstance(m,list):
         args = (m,)
         m = 1
         incr = True
-    elif l == 0 and int(m) < 0:         
+    elif l == 0 and int(m) < 0:
         args = False
         deff = True
         t = int(m)*-1
@@ -481,7 +481,7 @@ def annuity(mt,x,n,p,m=1,*args):
                 args = False
         else:
             pass
-    elif l == 2:        
+    elif l == 2:
         if isinstance(args[0],list):
             deff = True
             t = int(args[1])*-1
@@ -492,9 +492,9 @@ def annuity(mt,x,n,p,m=1,*args):
             args = args[1]
         else:
             pass
-    else:        
+    else:
         pass
-    
+
     if p == 1:
         post = True
     elif p == 0:
@@ -536,7 +536,7 @@ def annuity(mt,x,n,p,m=1,*args):
     elif incr and not deff and not wh_l and post:
         return qaxn(mt,x,n,q,m)
     elif incr and not deff and wh_l and not post:
-        return qaax(mt,x,q,m)    
+        return qaax(mt,x,q,m)
     elif incr and not deff and wh_l and post:
         return qax(mt,x,q,m)
     elif incr and deff and not wh_l and not post:
